@@ -1,0 +1,175 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="barra-oscura">
+    <div class="encabezado">
+      <h1>Mapa de lugares</h1>
+      <p>{{ registros.length }} {{ registros.length === 1 ? 'lugar guardado' : 'lugares guardados' }}</p>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="contenido-mapa">
+  <div id="map" style="width: 100%; height: 100%;"></div>
+
+  <!-- Pestañas flotando sobre el mapa, justo debajo del título -->
+  <div class="tabs-mapa" role="tablist">
+    <button
+      *ngFor="let tab of tabs"
+      type="button"
+      role="tab"
+      class="tab"
+      [class.activo]="tabActivo === tab.id"
+      [attr.aria-selected]="tabActivo === tab.id"
+      (click)="seleccionarTab(tab.id)">
+      {{ tab.nombre }}<span *ngIf="tab.id === 'todos'"> · {{ contar('todos') }}</span>
+    </button>
+  </div>
+
+  <!-- Botón "Mis lugares": abre el historial -->
+  <ion-button class="btn-lugares" (click)="listaAbierta = true">
+    <ion-icon slot="start" name="list-outline"></ion-icon>
+    Mis lugares
+  </ion-button>
+
+  <!-- Botón redondo: registra en tu ubicación actual -->
+  <ion-button
+    class="btn-flotante"
+    aria-label="Registrar en mi ubicación actual"
+    (click)="registrarAqui()">
+    <ion-icon slot="icon-only" name="add"></ion-icon>
+  </ion-button>
+
+  <!-- Lista "Mis lugares" (historial) -->
+  <ion-modal
+    [isOpen]="listaAbierta"
+    (didDismiss)="listaAbierta = false"
+    [initialBreakpoint]="0.6"
+    [breakpoints]="[0, 0.6, 1]">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Mis lugares</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="listaAbierta = false">Cerrar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content>
+        <p class="lista-vacia" *ngIf="registros.length === 0">
+          Aún no has guardado lugares. Toca el mapa o el botón + para registrar el primero.
+        </p>
+
+        <ion-list lines="full" *ngIf="registros.length > 0">
+          <ion-item button *ngFor="let r of historial" (click)="irALugar(r)">
+            <img slot="start" class="miniatura" [src]="r.fotoBase64" alt="" />
+            <ion-label>
+              <h3>{{ tituloDe(r) }}</h3>
+              <p class="lista-categoria">{{ categoriaDe(r) }}</p>
+              <p class="lista-estrellas" *ngIf="r.calificacion">
+                <ion-icon *ngFor="let n of estrellas" [name]="n <= r.calificacion ? 'star' : 'star-outline'"></ion-icon>
+              </p>
+              <p>{{ r.fecha }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Ventana de "Nuevo registro" -->
+  <ion-modal #modal [initialBreakpoint]="0.9" [breakpoints]="[0, 0.6, 0.9, 1]">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Nuevo registro</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="cerrarModal()">Cancelar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content
+        class="ion-padding"
+        style="--padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));">
+
+        <!-- Foto con botón para volver a tomarla -->
+        <div class="foto-modal" *ngIf="fotoTemporal">
+          <img [src]="fotoTemporal" alt="Foto del lugar" />
+          <ion-button
+            size="small"
+            class="btn-retomar"
+            [disabled]="retomando"
+            (click)="retomarFoto()">
+            <ion-icon slot="start" name="camera-outline"></ion-icon>
+            Volver a tomar
+          </ion-button>
+        </div>
+
+        <p class="ubicacion-modal" *ngIf="coordsTemporal">
+          Ubicación: {{ coordsTemporal.lat | number: '1.5-5' }}, {{ coordsTemporal.lng | number: '1.5-5' }}
+        </p>
+
+        <ion-item>
+          <ion-input
+            label="Nombre del lugar"
+            labelPlacement="stacked"
+            [(ngModel)]="nombreTemporal"
+            placeholder="Ej: Café La Esquina">
+          </ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-select
+            label="Categoría"
+            labelPlacement="stacked"
+            interface="popover"
+            [(ngModel)]="categoriaTemporal">
+            <ion-select-option value="mirador">Mirador</ion-select-option>
+            <ion-select-option value="museo">Museo</ion-select-option>
+            <ion-select-option value="restaurante">Restaurante</ion-select-option>
+            <ion-select-option value="cafeteria">Cafetería</ion-select-option>
+            <ion-select-option value="otro">Otro</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <!-- Calificación con estrellas -->
+        <p class="titulo-seccion">¿Qué tal es?</p>
+        <div class="estrellas-modal">
+          <button
+            *ngFor="let n of estrellas"
+            type="button"
+            [attr.aria-label]="n + ' estrellas'"
+            (click)="calificar(n)">
+            <ion-icon [name]="n <= calificacionTemporal ? 'star' : 'star-outline'"></ion-icon>
+          </button>
+        </div>
+
+        <!-- Etiquetas que se marcan tocándolas -->
+        <p class="titulo-seccion">Etiquetas</p>
+        <div class="etiquetas-modal">
+          <ion-chip
+            *ngFor="let e of etiquetasDisponibles"
+            [outline]="!etiquetasTemporal.includes(e)"
+            [color]="etiquetasTemporal.includes(e) ? 'primary' : 'medium'"
+            (click)="alternarEtiqueta(e)">
+            {{ e }}
+          </ion-chip>
+        </div>
+
+        <ion-item>
+          <ion-label position="stacked">Descripción</ion-label>
+          <ion-textarea
+            [(ngModel)]="notaTemporal"
+            placeholder="¿Qué hay aquí? Horario, precios, recomendaciones..."
+            [autoGrow]="true"
+            rows="3">
+          </ion-textarea>
+        </ion-item>
+
+        <ion-button expand="block" (click)="guardarRegistro()" style="margin-top:16px;">
+          Guardar registro
+        </ion-button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

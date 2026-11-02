@@ -1,0 +1,178 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
+/* @import "@ionic/angular/css/palettes/dark.always.css"; */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+// @import '@ionic/angular/css/palettes/dark.system.css';
+
+@import "leaflet/dist/leaflet.css";
+
+/* =========================================================
+ * Tema pastel "Menta y durazno"
+ * Cambia el color principal de Ionic (botones, chips, selects)
+ * de azul a verde menta.
+ * ========================================================= */
+:root {
+  --ion-color-primary: #5cbf9b;
+  --ion-color-primary-rgb: 92, 191, 155;
+  --ion-color-primary-contrast: #103a2c;
+  --ion-color-primary-contrast-rgb: 16, 58, 44;
+  --ion-color-primary-shade: #51a888;
+  --ion-color-primary-tint: #6cc5a5;
+}
+
+/* =========================================================
+ * Estilos del mapa (Leaflet): pines, ventanita y controles.
+ * Van aquí y no en home.page.scss porque Leaflet dibuja estos
+ * elementos fuera del componente.
+ * ========================================================= */
+
+/* Filtro que le baja la intensidad al mapa para que se vea pastel */
+.leaflet-tile-pane {
+   filter: saturate(0.45) brightness(1.08) contrast(0.9);
+}
+
+/* ---------- Pin con el ícono de la categoría ---------- */
+.pin-lugar {
+  background: none;
+  border: 0;
+}
+
+.pin {
+  width: 34px;
+  height: 34px;
+  border-radius: 50% 50% 50% 0;
+  background: #b8c4bf;
+  border: 2px solid #fff;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  transform: rotate(-45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Un color pastel por categoría */
+.pin-mirador     { background: #7fd1b0; } /* menta */
+.pin-cafeteria   { background: #f2b49b; } /* durazno */
+.pin-restaurante { background: #f5cf7a; } /* amarillo */
+.pin-museo       { background: #9cc7f0; } /* azul cielo */
+.pin-otro        { background: #b8c4bf; } /* gris verdoso */
+
+.pin span {
+  transform: rotate(45deg); /* endereza el ícono */
+  display: flex;
+}
+
+.pin svg {
+  width: 17px;
+  height: 17px;
+  fill: #fff;
+}
+
+/* ---------- Ventanita (popup) del lugar ---------- */
+.leaflet-popup-content-wrapper {
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+.popup-lugar {
+  max-width: 180px;
+  text-align: center;
+  color: #333;
+}
+
+.popup-lugar small {
+  display: block;
+  color: #d0805e;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.popup-lugar img {
+  width: 150px;
+  border-radius: 10px;
+}
+
+.popup-lugar p {
+  margin: 4px 0;
+}
+
+.popup-lugar .meta {
+  font-size: 11px;
+  color: #999;
+}
+
+/* Estrellas y etiquetas dentro de la ventanita del pin */
+.popup-lugar .estrellas {
+  color: #f6c453;
+  letter-spacing: 2px;
+}
+
+.popup-lugar .estrellas span {
+  color: #e8e3ea;
+}
+
+.popup-lugar .etiquetas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+  margin: 4px 0;
+}
+
+.popup-lugar .etiqueta {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #fff0e8;
+  color: #b0603e;
+}
+
+/* ---------- Controles de Leaflet en tonos pastel ---------- */
+.leaflet-container {
+  background: #f3f7f2;
+}
+
+.leaflet-bar a {
+  color: #3f6b5d;
+}
+
+.leaflet-container .leaflet-control-attribution {
+  background: rgba(255, 255, 255, 0.8);
+  color: #6b9486;
+}
+
+.leaflet-container .leaflet-control-attribution a {
+  color: #d0805e;
+}

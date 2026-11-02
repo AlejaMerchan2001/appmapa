@@ -1,0 +1,188 @@
+/* ---------- Cabecera menta ---------- */
+.barra-oscura {
+  --background: #e3f4ec;
+  --border-width: 0;
+  --padding-start: 16px;
+  --padding-end: 16px;
+}
+
+.encabezado {
+  padding: 8px 0 2px;
+}
+
+.encabezado h1 {
+  margin: 0;
+  color: #245043;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.encabezado p {
+  margin: 2px 0 0;
+  color: #6b9486;
+  font-size: 12px;
+}
+
+/* Fondo claro mientras cargan las partes del mapa */
+.contenido-mapa {
+  --background: #f3f7f2;
+}
+
+/* ---------- Botón redondo + ---------- */
+.btn-flotante {
+  position: absolute;
+  right: 18px;
+  bottom: calc(36px + env(safe-area-inset-bottom, 0px)); /* encima del crédito del mapa */
+  z-index: 1000;
+  width: 60px;
+  height: 60px;
+  margin: 0;
+  --border-radius: 50%;
+  --background: #f2b49b; /* durazno */
+  --color: #5a2a14;
+  --box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+  font-size: 22px;
+}
+
+/* ---------- Botón "Mis lugares" (al lado del +) ---------- */
+.btn-lugares {
+  position: absolute;
+  right: 90px;
+  bottom: calc(44px + env(safe-area-inset-bottom, 0px));
+  z-index: 1000;
+  height: 44px;
+  margin: 0;
+  --border-radius: 999px;
+  --background: #fff;
+  --color: #245043;
+  --box-shadow: 0 4px 12px rgba(36, 80, 67, 0.18);
+  --padding-start: 16px;
+  --padding-end: 18px;
+  font-weight: 700;
+  text-transform: none;
+}
+
+/* ---------- Lista "Mis lugares" ---------- */
+.miniatura {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.lista-categoria {
+  color: #d0805e !important;
+  font-weight: 600;
+}
+
+.lista-estrellas {
+  color: #f6c453 !important;
+}
+
+.lista-vacia {
+  padding: 24px;
+  text-align: center;
+  color: var(--ion-color-medium);
+}
+
+/* ---------- Pestañas flotando sobre el mapa ---------- */
+.tabs-mapa {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 6px 16px 28px;
+  background: linear-gradient(#e3f4ec 35%, rgba(227, 244, 236, 0)); /* degradado sobre el mapa */
+  z-index: 1000; /* por encima de Leaflet */
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  pointer-events: none; /* la franja vacía deja pasar los toques al mapa */
+}
+
+.tabs-mapa::-webkit-scrollbar {
+  display: none;
+}
+
+.tab {
+  flex-shrink: 0;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: #3f6b5d;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(36, 80, 67, 0.12);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  pointer-events: auto; /* pero los botones sí reciben el toque */
+}
+
+.tab.activo {
+  background: #7fd1b0;   /* menta */
+  color: #103a2c;
+}
+
+/* Baja los botones + / − de Leaflet para que no queden debajo de las pestañas */
+:host ::ng-deep .leaflet-top.leaflet-left {
+  top: 60px;
+}
+
+/* Coordenadas que se muestran en el formulario de nuevo registro */
+.ubicacion-modal {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: var(--ion-color-medium);
+}
+
+/* ---------- Formulario de nuevo registro ---------- */
+.foto-modal {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.foto-modal img {
+  display: block;
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.btn-retomar {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  margin: 0;
+  --background: rgba(20, 24, 28, 0.7);
+  --color: #fff;
+  --border-radius: 999px;
+}
+
+.titulo-seccion {
+  margin: 16px 0 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.estrellas-modal {
+  display: flex;
+  gap: 4px;
+}
+
+.estrellas-modal button {
+  background: none;
+  border: 0;
+  padding: 4px;
+  font-size: 30px;
+  color: #f6c453;
+  cursor: pointer;
+}
+
+.etiquetas-modal ion-chip {
+  margin: 0 6px 6px 0;
+}
